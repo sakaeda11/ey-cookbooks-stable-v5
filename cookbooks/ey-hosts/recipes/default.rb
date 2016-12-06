@@ -25,7 +25,7 @@ execute "Setup /etc/ey_hosts1" do
   command <<-EOF
   echo '#{utility_nodes}' mor> /etc/ey_hosts1
   echo '#{db_replicas}' >> /etc/ey_hosts1
-  echo '#{db_master}' >> /etc/ey_hosts1
+  echo '#{node.db_master[0]}' >> /etc/ey_hosts1
   EOF
 end
 
