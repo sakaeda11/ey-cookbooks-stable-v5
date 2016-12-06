@@ -18,14 +18,14 @@ template "/etc/ey_hosts" do
   variables({
     :utility_nodes => utility_nodes,
     :db_replicas => db_replicas,
-    :db_master = db_master
+    :db_master => db_master
   })
 end
 
 execute "Setup /etc/ey_hosts1" do
   user "root"
   command <<-EOF
-  echo '#{utility_nodes}' > /etc/ey_hosts1
+  echo '#{utility_nodes}' mor> /etc/ey_hosts1
   echo '#{db_replicas}' >> /etc/ey_hosts1
   echo '#{db_master}' >> /etc/ey_hosts1
   EOF
