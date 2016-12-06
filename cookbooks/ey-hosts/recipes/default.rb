@@ -1,6 +1,6 @@
-utility_nodes = @node.dna['utility_instances']
-db_replicas = @node.dna['db_slaves']
-db_master = @node.db_master
+utility_nodes = node.dna['utility_instances']
+db_replicas = node.dna['db_slaves']
+db_master = node.db_master
 
 execute "Clean up ey-hosts entries from hosts file" do
   user "root"
@@ -10,11 +10,13 @@ end
 
 execute "Setup /etc/ey_hosts" do
   user "root"
-  command "echo '#---EY-HOSTS-START' > /etc/ey_hosts
+  command <<-EOF
+  echo '#---EY-HOSTS-START' > /etc/ey_hosts
   echo '#{utility_nodes}' >> /etc/ey_hosts
   echo '#{db_replicas}' >> /etc/ey_hosts
   echo '#{db_master}' >> /etc/ey_hosts
-  echo '#---EY-HOSTS-END"
+  echo '#---EY-HOSTS-END' >> /etc/ey_hosts
+  EOF
 end
 
 # append to /etc/hosts
