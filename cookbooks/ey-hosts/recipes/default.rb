@@ -3,9 +3,9 @@ utility_nodes = node.dna['engineyard']['environment']['instances'].select{|i| ['
 db_replicas = node.dna['engineyard']['environment']['instances'].select{|i| ['util'].include?(i['role'])}.map {|i| {"ey-#{i['role']}-#{i['name']}".gsub(/-$/, '') => i['private_hostname']}}.each_with_object({}) { |el, h| el.each { |k, v| k='' if k.nil?; h[k].nil? ? h[k] = v : h[k] = (Array.new([h[k]]) << v).flatten } }
 
 
-utility_nodes = node.dna['engineyard']['environment']['instances'].select{|i| ['util'].include?(i['role'])}.map {|i| {"ey-#{i['role']}-#{i['name']}".gsub(/-$/, '') => node.private_ip_for(i['id'])}}.each_with_object({}) { |el, h| el.each { |k, v| k='' if k.nil?; h[k].nil? ? h[k] = v : h[k] = (Array.new([h[k]]) << v).flatten } }
+utility_nodes = node.dna['engineyard']['environment']['instances'].select{|i| ['util'].include?(i['role'])}.map {|i| {"ey-#{i['role']}-#{i['name']}".gsub(/-$/, '') => node.private_ip_for(i)}}.each_with_object({}) { |el, h| el.each { |k, v| k='' if k.nil?; h[k].nil? ? h[k] = v : h[k] = (Array.new([h[k]]) << v).flatten } }
 
-db_replicas = node.dna['engineyard']['environment']['instances'].select{|i| ['util'].include?(i['role'])}.map {|i| {"ey-#{i['role']}-#{i['name']}".gsub(/-$/, '') => node.private_ip_for(i['id'])}}.each_with_object({}) { |el, h| el.each { |k, v| k='' if k.nil?; h[k].nil? ? h[k] = v : h[k] = (Array.new([h[k]]) << v).flatten } }
+db_replicas = node.dna['engineyard']['environment']['instances'].select{|i| ['util'].include?(i['role'])}.map {|i| {"ey-#{i['role']}-#{i['name']}".gsub(/-$/, '') => node.private_ip_for(i)}}.each_with_object({}) { |el, h| el.each { |k, v| k='' if k.nil?; h[k].nil? ? h[k] = v : h[k] = (Array.new([h[k]]) << v).flatten } }
 
 
 execute "Clean up ey-hosts entries from hosts file" do
