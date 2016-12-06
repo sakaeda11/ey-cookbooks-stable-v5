@@ -17,10 +17,10 @@
   <% end %>
 <% end %>
 
-<% if @utility_instances.length > 0 %>
+<% if @utility_nodes.length > 0 %>
 # EY Utility Instances
 <% end %>
-<% @utility_instances.each do |key, value| %>
+<% @utility_nodes.each do |key, value| %>
   <% if value.is_a? String %>
 <%= value %>        <%= key %>
   <% else %>
