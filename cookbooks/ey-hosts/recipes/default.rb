@@ -1,6 +1,8 @@
-utility_nodes = node.dna['utility_instances']
-db_replicas = node.dna['db_slaves']
-db_master = node.db_master
+utility_nodes = node.dna['engineyard']['environment']['instances'].select{|i| ['util'].include?(i['role'])}.map {|i| {"ey-#{i['role']}-#{i['name']}".gsub(/-$/, '') => i['private_hostname']}}.each_with_object({}) { |el, h| el.each { |k, v| k='' if k.nil?; h[k].nil? ? h[k] = v : h[k] = (Array.new([h[k]]) << v).flatten } }
+
+db_replicas = node.dna['engineyard']['environment']['instances'].select{|i| ['util'].include?(i['role'])}.map {|i| {"ey-#{i['role']}-#{i['name']}".gsub(/-$/, '') => i['private_hostname']}}.each_with_object({}) { |el, h| el.each { |k, v| k='' if k.nil?; h[k].nil? ? h[k] = v : h[k] = (Array.new([h[k]]) << v).flatten } }
+
+db_master = node.db_master[0]
 
 execute "Clean up ey-hosts entries from hosts file" do
   user "root"
@@ -8,14 +10,24 @@ execute "Clean up ey-hosts entries from hosts file" do
 end
 
 
-execute "Setup /etc/ey_hosts" do
+template "/etc/ey_hosts" do
+  owner 'root'
+  group 'root'
+  mode 0644
+  source "ey_hosts.erb"
+  variables({
+    :utility_nodes => utility_nodes,
+    :db_replicas => db_replicas,
+    :db_master = db_master
+  })
+end
+
+execute "Setup /etc/ey_hosts1" do
   user "root"
   command <<-EOF
-  echo '#---EY-HOSTS-START' > /etc/ey_hosts
-  echo '#{utility_nodes}' >> /etc/ey_hosts
-  echo '#{db_replicas}' >> /etc/ey_hosts
-  echo '#{db_master}' >> /etc/ey_hosts
-  echo '#---EY-HOSTS-END' >> /etc/ey_hosts
+  echo '#{utility_nodes}' > /etc/ey_hosts1
+  echo '#{db_replicas}' >> /etc/ey_hosts1
+  echo '#{db_master}' >> /etc/ey_hosts1
   EOF
 end
 

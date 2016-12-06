@@ -1,0 +1,34 @@
+#---EY-HOSTS-START
+<% if @db_master.length > 0 %>
+# EY Database Master
+<% end %>
+
+
+<% if @db_replicas.length > 0 %>
+# EY Database Replicas
+<% end %>
+<% @db_replicas.each do |key, value| %>
+  <% if value.is_a? String %>
+<%= value %>        <%= key %>
+  <% else %>
+    <% value.each_with_index do |host, index| %>
+<%= host %>        <%= key %>-<%= index %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if @utility_instances.length > 0 %>
+# EY Utility Instances
+<% end %>
+<% @utility_instances.each do |key, value| %>
+  <% if value.is_a? String %>
+<%= value %>        <%= key %>
+  <% else %>
+    <% value.each_with_index do |host, index| %>
+<%= host %>        <%= key %>-<%= index %>
+    <% end %>
+  <% end %>
+<% end %>
+
+    
+#---EY-HOSTS-END
